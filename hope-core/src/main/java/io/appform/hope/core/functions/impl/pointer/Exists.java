@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Strings;
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.BooleanValue;
@@ -27,6 +28,7 @@ import io.appform.hope.core.visitors.Evaluator;
  * Returns true {@link BooleanValue} if a json node/value exists at provided pointer.
  */
 @FunctionImplementation("pointer.exists")
+@StatelessFunction
 public class Exists extends HopeFunction<BooleanValue> {
 
     private final Value pointer;

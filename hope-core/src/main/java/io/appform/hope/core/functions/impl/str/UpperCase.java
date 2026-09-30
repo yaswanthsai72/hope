@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.str;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.StringValue;
@@ -25,6 +26,7 @@ import io.appform.hope.core.visitors.Evaluator;
  * Returns upper case {@link StringValue} of provided {@link StringValue} parameter.
  */
 @FunctionImplementation("str.upper")
+@StatelessFunction
 public class UpperCase extends HopeFunction<StringValue> {
     private final Value arg;
 

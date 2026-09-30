@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.arr;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.NumericValue;
@@ -28,6 +29,7 @@ import java.util.List;
  * Returns length of array
  */
 @FunctionImplementation("arr.len")
+@StatelessFunction
 public class Length extends HopeFunction<NumericValue> {
 
     private final Value arr;

@@ -15,6 +15,7 @@
 package io.appform.hope.core.functions.impl.date;
 
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.values.NumericValue;
 import io.appform.hope.core.visitors.Evaluator;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
  * Returns the current minute of the hour as a NumericValue.
  */
 @FunctionImplementation("date.minute_of_hour")
+@StatelessFunction
 public class MinuteOfHour extends HopeFunction<NumericValue> {
     @Override
     public NumericValue apply(Evaluator.EvaluationContext evaluationContext) {

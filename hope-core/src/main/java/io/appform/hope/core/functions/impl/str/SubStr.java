@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.str;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.StringValue;
@@ -27,6 +28,7 @@ import io.appform.hope.core.visitors.Evaluator;
  * to {@link io.appform.hope.core.values.NumericValue} end (exclusive).
  */
 @FunctionImplementation("str.substr")
+@StatelessFunction
 public class SubStr extends HopeFunction<StringValue> {
     private final Value arg;
     private final Value start;

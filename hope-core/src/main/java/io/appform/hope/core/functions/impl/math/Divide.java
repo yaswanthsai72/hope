@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.math;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.utils.FunctionHelpers;
@@ -26,6 +27,7 @@ import io.appform.hope.core.visitors.Evaluator;
  * Returns quotient {@link NumericValue} for division of evaluated {@link NumericValue} numerator by evaluated {@link NumericValue} denominator.
  */
 @FunctionImplementation("math.div")
+@StatelessFunction
 public class Divide extends HopeFunction<NumericValue> {
     private final Value num;
     private final Value den;

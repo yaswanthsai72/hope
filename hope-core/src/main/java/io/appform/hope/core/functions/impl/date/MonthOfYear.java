@@ -15,6 +15,7 @@
 package io.appform.hope.core.functions.impl.date;
 
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.values.NumericValue;
 import io.appform.hope.core.visitors.Evaluator;
@@ -27,6 +28,7 @@ import java.util.Locale;
  * returns the current month of the year as a NumericValue.
  */
 @FunctionImplementation("date.month_of_year")
+@StatelessFunction
 public class MonthOfYear extends HopeFunction<NumericValue> {
     @Override
     public NumericValue apply(Evaluator.EvaluationContext evaluationContext) {

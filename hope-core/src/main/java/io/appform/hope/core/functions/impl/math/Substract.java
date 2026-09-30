@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.math;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.NumericValue;
@@ -25,6 +26,7 @@ import io.appform.hope.core.visitors.Evaluator;
  * Returns {@link NumericValue} result after subtracting evaluated {@link NumericValue} rhs from evaluated {@link NumericValue} from lhs.
  */
 @FunctionImplementation("math.sub")
+@StatelessFunction
 public class Substract extends HopeFunction<NumericValue> {
     private final Value lhs;
     private final Value rhs;

@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.utils;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.NumericValue;
@@ -26,6 +27,7 @@ import io.appform.hope.core.visitors.Evaluator;
  * Returns {@link NumericValue} java Object.hashCode() hash of provided evaluated {@link StringValue} parameter.
  */
 @FunctionImplementation("utils.hash_j")
+@StatelessFunction
 public class HashJ extends HopeFunction<NumericValue> {
     private final Value arg;
 

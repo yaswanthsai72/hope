@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.str;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.NumericValue;
@@ -26,6 +27,7 @@ import io.appform.hope.core.visitors.Evaluator;
  * Returns {@link NumericValue} length of provided evaluated {@link StringValue} parameter.
  */
 @FunctionImplementation("str.len")
+@StatelessFunction
 public class Length extends HopeFunction<NumericValue> {
     private final Value arg;
 

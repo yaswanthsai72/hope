@@ -17,6 +17,7 @@ package io.appform.hope.core.functions.impl.arr;
 import com.google.common.collect.Sets;
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.BooleanValue;
@@ -31,6 +32,7 @@ import java.util.TreeSet;
  * Checks if (evaluated) lhs array contains all values from (evaluated) rhs array. Returns {@link BooleanValue}.
  */
 @FunctionImplementation("arr.contains_all")
+@StatelessFunction
 public class ContainsAll extends HopeFunction<BooleanValue> {
     private final Value lhs;
     private final Value rhs;

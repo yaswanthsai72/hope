@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.arr;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.BooleanValue;
@@ -28,6 +29,7 @@ import java.util.HashSet;
  * Checks if (evaluated) lhs value is not present in (evaluated) rhs array. Returns {@link BooleanValue}.
  */
 @FunctionImplementation("arr.not_in")
+@StatelessFunction
 public class NotIn extends HopeFunction<BooleanValue> {
     private final Value lhs;
     private final Value rhs;

@@ -16,6 +16,7 @@ package io.appform.hope.core.functions.impl.math;
 
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.values.NumericValue;
@@ -27,6 +28,7 @@ import java.util.Arrays;
  * Returns {@link NumericValue} product of N provided evaluated {@link NumericValue} parameters.
  */
 @FunctionImplementation("math.prod")
+@StatelessFunction
 public class Multiply extends HopeFunction<NumericValue> {
 
     private final Value[] values;

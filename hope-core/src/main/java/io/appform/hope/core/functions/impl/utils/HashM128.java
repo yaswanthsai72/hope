@@ -18,6 +18,7 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import io.appform.hope.core.Value;
 import io.appform.hope.core.functions.FunctionImplementation;
+import io.appform.hope.core.functions.StatelessFunction;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.utils.Converters;
 import io.appform.hope.core.utils.RawTypeHandler;
@@ -32,6 +33,7 @@ import java.nio.charset.Charset;
  * Returns {@link NumericValue} Murmur3 128 hash of provided evaluated {@link StringValue} parameter.
  */
 @FunctionImplementation("utils.hash_m128")
+@StatelessFunction
 @SuppressWarnings("UnstableApiUsage")
 public class HashM128 extends HopeFunction<NumericValue> {
     private final Value arg;

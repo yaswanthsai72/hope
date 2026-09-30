@@ -18,6 +18,7 @@ import io.appform.hope.core.Value;
 import io.appform.hope.core.Visitor;
 import io.appform.hope.core.functions.FunctionRegistry;
 import io.appform.hope.core.functions.HopeFunction;
+import io.appform.hope.core.functions.StatelessFunction;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,7 +40,8 @@ public class FunctionValue extends Value {
     private final FunctionRegistry.ConstructorMeta selectedConstructor;
 
     /**
-     * Lazily constructed and cached {@link HopeFunction} instance for this call site.
+     * Lazily constructed and cached {@link HopeFunction} instance for this call site; only used when the
+     * function implementation is annotated {@link StatelessFunction}.
      * Marked {@code transient} so that Lombok excludes it from generated {@code equals}/{@code hashCode},
      * and excluded from {@code toString}; accessors are suppressed since the cache must only be
      * managed via {@link #function()}.
@@ -56,21 +58,30 @@ public class FunctionValue extends Value {
      */
     public FunctionValue(String name, List<Value> parameters, FunctionRegistry.ConstructorMeta selectedConstructor) {
         this.name = name;
-        this.parameters = parameters;
         this.selectedConstructor = selectedConstructor;
+        // For cacheable functions the constructed instance is reused for all evaluations of this call
+        // site, so the parameters it is bound to must be fixed at construction: snapshot the list to
+        // insulate the cached instance from later mutations of the supplied list. For non-cacheable
+        // functions the list is retained as-is so that pre-existing behavior (including any mutation
+        // of the supplied list between evaluations) is preserved.
+        this.parameters = isCacheable() ? List.copyOf(parameters) : parameters;
     }
 
     /**
-     * Returns the {@link HopeFunction} instance for this call site, constructing it on first access and
-     * caching it for subsequent evaluations. Since a {@link FunctionValue} is immutable and represents a
-     * fixed call site in a parsed expression, the constructed function can safely be reused across
-     * evaluations and threads (implementations of {@link HopeFunction#apply} are expected to be stateless
-     * with respect to the passed {@link io.appform.hope.core.visitors.Evaluator.EvaluationContext}).
+     * Returns the {@link HopeFunction} instance for this call site. If the function implementation is
+     * annotated with {@link StatelessFunction}, the instance is constructed on first access and cached for
+     * all subsequent evaluations, since such implementations are guaranteed to hold no mutable state and to
+     * be safe under concurrent invocation. Implementations without the annotation continue to receive a
+     * freshly constructed instance on every evaluation, preserving the pre-existing behavior for functions
+     * that use instance fields as per-evaluation scratch space.
      *
-     * @return the (cached) function instance for this call site
+     * @return the (cached for {@link StatelessFunction} implementations) function instance for this call site
      * @throws IllegalArgumentException if the function instance cannot be constructed
      */
     public HopeFunction<?> function() {
+        if (!isCacheable()) {
+            return createFunction();
+        }
         final HopeFunction<?> result = cachedFunction;
         if (result != null) {
             return result;
@@ -83,6 +94,12 @@ public class FunctionValue extends Value {
             }
             return current;
         }
+    }
+
+    private boolean isCacheable() {
+        return selectedConstructor.getConstructor()
+                .getDeclaringClass()
+                .isAnnotationPresent(StatelessFunction.class);
     }
 
     private HopeFunction<?> createFunction() {
