@@ -23,7 +23,6 @@ import io.appform.hope.core.TreeNode;
 import io.appform.hope.core.Value;
 import io.appform.hope.core.VisitorAdapter;
 import io.appform.hope.core.exceptions.errorstrategy.ErrorHandlingStrategy;
-import io.appform.hope.core.functions.FunctionRegistry;
 import io.appform.hope.core.functions.HopeFunction;
 import io.appform.hope.core.values.ArrayValue;
 import io.appform.hope.core.values.BooleanValue;
@@ -37,7 +36,6 @@ import io.appform.hope.core.visitors.Evaluator;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -577,35 +575,8 @@ public class Converters {
                 });
     }
 
-    @SuppressWarnings("java:S3740")
     private static HopeFunction function(FunctionValue functionValue) {
-        final List<Value> parameters = functionValue.getParameters();
-        return createFunction(functionValue.getName(),
-                              functionValue.getSelectedConstructor(),
-                              parameters);
-    }
-
-    @SuppressWarnings({"java:S3740", "java:S3878", "java:S3776"})
-    private static HopeFunction createFunction(
-            String name,
-            FunctionRegistry.ConstructorMeta selectedConstructor,
-            List<Value> parameters) {
-        try {
-            final Constructor<? extends HopeFunction> constructor = selectedConstructor.getConstructor();
-            if (selectedConstructor.isHasVariableArgs()) {
-                return constructor
-                        .newInstance(
-                                new Object[]{parameters.toArray(new Value[parameters.size()])});
-            }
-            else {
-                return constructor
-                        .newInstance(
-                                parameters.toArray(new Object[parameters.size()]));
-            }
-        }
-        catch (Exception e) {
-            throw new IllegalArgumentException("Could not create instance of function: '" + name + "'", e);
-        }
+        return functionValue.function();
     }
 
     private static Value jsonNodeToValue(JsonNode node) {
