@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  *     within the invocation (e.g. the system clock, as in date/now or sys/epoch functions)</li>
  *     <li>Concurrent invocations of {@link HopeFunction#apply(Evaluator.EvaluationContext)} on the same
  *     instance are safe</li>
- * </ul> *
+ * </ul>
  * <p>Functions carrying this annotation are constructed once per call site
  * (see {@link io.appform.hope.core.values.FunctionValue#function()}) and the instance is cached and reused
  * for all subsequent evaluations. Functions without this annotation continue to receive a fresh instance

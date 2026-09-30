@@ -26,6 +26,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,8 +42,16 @@ public class FunctionValue extends Value {
     private final FunctionRegistry.ConstructorMeta selectedConstructor;
 
     /**
-     * Lazily constructed and cached {@link HopeFunction} instance for this call site; only used when the
-     * function implementation is annotated {@link StatelessFunction}.
+     * Whether the function implementation is annotated {@link StatelessFunction} and therefore its
+     * instance is cached per call site. Computed once at construction so that the evaluation hot path
+     * does not perform an annotation lookup on every call.
+     */
+    @ToString.Exclude
+    private final boolean cacheable;
+
+    /**
+     * Lazily constructed and cached {@link HopeFunction} instance for this call site; only used when
+     * {@link #cacheable} is set.
      * Marked {@code transient} so that Lombok excludes it from generated {@code equals}/{@code hashCode},
      * and excluded from {@code toString}; accessors are suppressed since the cache must only be
      * managed via {@link #function()}.
@@ -59,12 +69,15 @@ public class FunctionValue extends Value {
     public FunctionValue(String name, List<Value> parameters, FunctionRegistry.ConstructorMeta selectedConstructor) {
         this.name = name;
         this.selectedConstructor = selectedConstructor;
+        this.cacheable = selectedConstructor.getConstructor()
+                .getDeclaringClass()
+                .isAnnotationPresent(StatelessFunction.class);
         // For cacheable functions the constructed instance is reused for all evaluations of this call
         // site, so the parameters it is bound to must be fixed at construction: snapshot the list to
         // insulate the cached instance from later mutations of the supplied list. For non-cacheable
         // functions the list is retained as-is so that pre-existing behavior (including any mutation
         // of the supplied list between evaluations) is preserved.
-        this.parameters = isCacheable() ? List.copyOf(parameters) : parameters;
+        this.parameters = cacheable ? immutableCopy(parameters) : parameters;
     }
 
     /**
@@ -79,7 +92,7 @@ public class FunctionValue extends Value {
      * @throws IllegalArgumentException if the function instance cannot be constructed
      */
     public HopeFunction<?> function() {
-        if (!isCacheable()) {
+        if (!cacheable) {
             return createFunction();
         }
         final HopeFunction<?> result = cachedFunction;
@@ -96,10 +109,16 @@ public class FunctionValue extends Value {
         }
     }
 
-    private boolean isCacheable() {
-        return selectedConstructor.getConstructor()
-                .getDeclaringClass()
-                .isAnnotationPresent(StatelessFunction.class);
+    private static List<Value> immutableCopy(List<Value> parameters) {
+        // Null elements are not expected from the parser, but List.copyOf rejects them outright;
+        // fall back to a null-tolerant snapshot so that directly constructed call sites do not
+        // fail in the constructor.
+        try {
+            return List.copyOf(parameters);
+        }
+        catch (NullPointerException e) {
+            return Collections.unmodifiableList(new ArrayList<>(parameters));
+        }
     }
 
     private HopeFunction<?> createFunction() {
